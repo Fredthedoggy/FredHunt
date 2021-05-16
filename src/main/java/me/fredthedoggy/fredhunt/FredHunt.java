@@ -1,0 +1,37 @@
+package me.fredthedoggy.fredhunt;
+
+import org.bukkit.NamespacedKey;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+public final class FredHunt extends JavaPlugin {
+
+    HashMap<UUID, Long> cooldowns = new HashMap<>();
+
+    NamespacedKey key = new NamespacedKey(this, "track_uuid");
+
+    private final static Pattern UUID_REGEX_PATTERN =
+            Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+
+    @Override
+    public void onEnable() {
+        this.getServer().getPluginManager().registerEvents(new CompassListener(this), this);
+        this.getCommand("tracker").setExecutor(new ManhuntCommand(this));
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+
+    public static boolean isValidUUID(String str) {
+        if (str == null) {
+            return false;
+        }
+        return UUID_REGEX_PATTERN.matcher(str).matches();
+    }
+
+}

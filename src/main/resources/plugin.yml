@@ -1,0 +1,11 @@
+name: FredHunt
+version: ${project.version}
+main: me.fredthedoggy.fredhunt.FredHunt
+api-version: 1.16
+prefix: FredHunt
+authors: [ Fredthedoggy ]
+description: Fredthedoggy's Manhunt Plugin
+commands:
+  tracker:
+    aliases: [manhunt, compass, fredhunt, track, hunt, hunter]
+    usage: "/tracker [Player]"
