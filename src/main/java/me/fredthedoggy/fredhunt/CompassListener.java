@@ -13,8 +13,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -36,7 +36,7 @@ public class CompassListener implements Listener {
         if (!itemStack.getType().equals(Material.COMPASS)) return;
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null) return;
-        String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.key, PersistentDataType.STRING);
+        String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
         if (itemData == null) return;
         if (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             Long time = System.currentTimeMillis();
@@ -75,11 +75,15 @@ public class CompassListener implements Listener {
                     ItemMeta meta = compass.getItemMeta();
                     if (meta == null) return;
                     meta.setDisplayName("§aTracker Compass");
-                    meta.getPersistentDataContainer().set(fredHunt.key, PersistentDataType.STRING, uuid.toString());
+                    meta.getPersistentDataContainer().set(fredHunt.track_uuid, PersistentDataType.STRING, uuid.toString());
                     compass.setItemMeta(meta);
                     event.getPlayer().getInventory().setItemInMainHand(compass);
                     Location targetLocation = loopPlayer.getLocation();
                     targetLocation.setY(1000);
+                    CompassMeta compassMeta = (CompassMeta) meta;
+                    compassMeta.setLodestone(targetLocation);
+                    compassMeta.setLodestoneTracked(false);
+                    compass.setItemMeta(compassMeta);
                     player.setCompassTarget(loopPlayer.getLocation());
                     player.sendMessage("§a§lSuccess! §7Now Tracking " + name);
                     playerSelector.close(player);
@@ -115,6 +119,10 @@ public class CompassListener implements Listener {
             Location targetLocation = target.getLocation();
             targetLocation.setY(1000);
             player.setCompassTarget(target.getLocation());
+            CompassMeta compassMeta = (CompassMeta) itemMeta;
+            compassMeta.setLodestone(targetLocation);
+            compassMeta.setLodestoneTracked(false);
+            itemStack.setItemMeta(compassMeta);
             player.sendMessage("§a§lSuccess! §7Now Tracking " + target.getName());
         }
     }
@@ -125,7 +133,7 @@ public class CompassListener implements Listener {
         if (!itemStack.getType().equals(Material.COMPASS)) return;
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null) return;
-        String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.key, PersistentDataType.STRING);
+        String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
         if (itemData != null) event.setCancelled(true);
     }
 
@@ -136,7 +144,7 @@ public class CompassListener implements Listener {
             if (!itemStack.getType().equals(Material.COMPASS)) continue;
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta == null) continue;
-            String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.key, PersistentDataType.STRING);
+            String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
             if (itemData == null) continue;
             itemStack.setAmount(0);
             Bukkit.getScheduler().runTaskLater(fredHunt, () -> {

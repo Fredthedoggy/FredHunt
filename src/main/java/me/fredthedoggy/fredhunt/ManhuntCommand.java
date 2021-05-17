@@ -1,12 +1,14 @@
 package me.fredthedoggy.fredhunt;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -32,7 +34,7 @@ public class ManhuntCommand implements CommandExecutor {
             if (!itemStack.getType().equals(Material.COMPASS)) return;
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta == null) return;
-            String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.key, PersistentDataType.STRING);
+            String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
             if (itemData == null) return;
             cancel.set(true);
             itemStack.setAmount(0);
@@ -51,8 +53,15 @@ public class ManhuntCommand implements CommandExecutor {
         ItemMeta meta = compass.getItemMeta();
         if (meta == null) return true;
         meta.setDisplayName("§aTracker Compass");
-        meta.getPersistentDataContainer().set(fredHunt.key, PersistentDataType.STRING, uuid.toString());
+        meta.getPersistentDataContainer().set(fredHunt.track_uuid, PersistentDataType.STRING, uuid.toString());
         compass.setItemMeta(meta);
+        Location targetLocation = player.getLocation();
+        targetLocation.setY(1000);
+        player.setCompassTarget(targetLocation);
+        CompassMeta compassMeta = (CompassMeta) meta;
+        compassMeta.setLodestone(targetLocation);
+        compassMeta.setLodestoneTracked(false);
+        compass.setItemMeta(compassMeta);
         player.getInventory().addItem(compass);
         return true;
     }
