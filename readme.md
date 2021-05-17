@@ -19,7 +19,7 @@ Based On Dream's Manhunt Plugin [Link](https://www.patreon.com/DreamWasTaken)
 
 ### Installing
 
-- Upload the latest release's .jar File to a Server's `/plugins` directory
+- Upload the [latest release](https://github.com/Fredthedoggy/FredHunt/releases)'s .jar File to a Server's `/plugins` directory
 - Restart (Reload May Cause Errors)
 
 ### Using
