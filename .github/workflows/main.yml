@@ -11,10 +11,16 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+         path: ~/.m2
+         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+         restore-keys: ${{ runner.os }}-m2
       - run: mvn --batch-mode --update-snapshots verify
       - run: rm -rf target/original-*
       - run: mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v2
         with:
-          name: Package
+          name: Compile
           path: staging/*
