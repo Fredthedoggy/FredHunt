@@ -12,7 +12,7 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
       - run: mvn --batch-mode --update-snapshots verify
-      - run: mkdir staging && ls target | grep -v '^original' | xargs cp -t staging
+      - run: mkdir staging && ls target | grep -v '^original' | grep '.*jar' | xargs cp "target/"-t staging
       - uses: actions/upload-artifact@v2
         with:
           name: Package
