@@ -57,7 +57,6 @@ public class ManhuntCommand implements CommandExecutor {
         compass.setItemMeta(meta);
         Location targetLocation = player.getLocation();
         targetLocation.setY(1000);
-        player.setCompassTarget(targetLocation);
         CompassMeta compassMeta = (CompassMeta) meta;
         compassMeta.setLodestone(targetLocation);
         compassMeta.setLodestoneTracked(false);
