@@ -17,6 +17,12 @@ Based On Dream's Manhunt Plugin [Link](https://www.patreon.com/DreamWasTaken)
 
 ## How To
 
+### Downloading
+
+Either Download [The Latest Development Build](https://github.com/Fredthedoggy/FredHunt/actions/workflows/main.yml?query=branch%3Amaster+is%3Asuccess++)) (The Top Link [Here](https://github.com/Fredthedoggy/FredHunt/actions/workflows/main.yml?query=branch%3Amaster+is%3Asuccess++))
+**or**
+Download the [Latest Lelease](https://github.com/Fredthedoggy/FredHunt/releases) [Here](https://github.com/Fredthedoggy/FredHunt/releases)
+
 ### Installing
 
 - Upload the [latest release](https://github.com/Fredthedoggy/FredHunt/releases)'s .jar File to a Server's `/plugins` directory
