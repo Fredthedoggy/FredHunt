@@ -84,7 +84,6 @@ public class CompassListener implements Listener {
                     compassMeta.setLodestone(targetLocation);
                     compassMeta.setLodestoneTracked(false);
                     compass.setItemMeta(compassMeta);
-                    player.setCompassTarget(loopPlayer.getLocation());
                     player.sendMessage("§a§lSuccess! §7Now Tracking " + name);
                     playerSelector.close(player);
                 }));
@@ -118,7 +117,6 @@ public class CompassListener implements Listener {
             }
             Location targetLocation = target.getLocation();
             targetLocation.setY(1000);
-            player.setCompassTarget(target.getLocation());
             CompassMeta compassMeta = (CompassMeta) itemMeta;
             compassMeta.setLodestone(targetLocation);
             compassMeta.setLodestoneTracked(false);
