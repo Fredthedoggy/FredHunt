@@ -39,7 +39,7 @@ public class ManhuntCommand implements CommandExecutor {
             cancel.set(true);
             itemStack.setAmount(0);
         });
-        if (cancel.get()) return false;
+        if (cancel.get()) return true;
         String name = "";
         UUID uuid = player.getUniqueId();
         if (args.length > 0) {
