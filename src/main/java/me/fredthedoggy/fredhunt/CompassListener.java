@@ -139,7 +139,7 @@ public class CompassListener implements Listener {
     public void onPlayerDie(PlayerDeathEvent event) {
         Player player = event.getEntity();
         for (ItemStack itemStack : event.getEntity().getInventory().getContents()) {
-            if (!itemStack.getType().equals(Material.COMPASS)) continue;
+            if (itemStack == null || !itemStack.getType().equals(Material.COMPASS)) continue;
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta == null) continue;
             String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
