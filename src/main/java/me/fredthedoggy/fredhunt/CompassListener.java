@@ -13,12 +13,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CompassListener implements Listener {
@@ -31,6 +33,7 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public void onItemInteract(PlayerInteractEvent event) {
+        if (event.getHand() == null || !event.getHand().equals(EquipmentSlot.HAND)) return;
         Player player = event.getPlayer();
         ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
         if (!itemStack.getType().equals(Material.COMPASS)) return;
@@ -39,14 +42,16 @@ public class CompassListener implements Listener {
         String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
         if (itemData == null) return;
         if (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            Long time = System.currentTimeMillis();
-            if (fredHunt.cooldowns.containsKey(player.getUniqueId())) {
-                if (time < fredHunt.cooldowns.get(player.getUniqueId()) + 3000) {
-                    player.sendMessage("§c§lError! §7Please Wait " + (((fredHunt.cooldowns.get(player.getUniqueId()) - time + 3000) / 1000) + 1) + " Seconds");
-                    return;
+            if (fredHunt.config.getBoolean("Gui.Cooldown")) {
+                Long time = System.currentTimeMillis();
+                if (fredHunt.cooldowns.containsKey(player.getUniqueId())) {
+                    if (time < fredHunt.cooldowns.get(player.getUniqueId()) + fredHunt.config.getLong("Gui.Cooldown-time")) {
+                        player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Cooldown-Message")).replace("[seconds]", String.valueOf((((fredHunt.cooldowns.get(player.getUniqueId()) - time + fredHunt.config.getLong("Gui.Cooldown-time")) / 1000) + 1))));
+                        return;
+                    }
                 }
+                fredHunt.cooldowns.put(player.getUniqueId(), time);
             }
-            fredHunt.cooldowns.put(player.getUniqueId(), time);
             int fullrows = (Bukkit.getOnlinePlayers().size() / 7) + 2;
             if (Bukkit.getOnlinePlayers().size() % 7 != 0) fullrows = fullrows + 1;
             boolean paged = false;
@@ -55,7 +60,7 @@ public class CompassListener implements Listener {
                 rows = 6;
                 paged = true;
             }
-            PaginatedGui playerSelector = new PaginatedGui(rows, (rows - 2) * 7, "Player Selector");
+            PaginatedGui playerSelector = new PaginatedGui(rows, (rows - 2) * 7, Objects.requireNonNull(fredHunt.config.getString("Language.Gui.Title")));
             playerSelector.setDefaultClickAction(event1 -> event1.setCancelled(true));
             GuiItem lightFillerItem = ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).setName("§r").asGuiItem();
             GuiItem fillerItem = ItemBuilder.from(Material.BLACK_STAINED_GLASS_PANE).setName("§r").asGuiItem();
@@ -68,13 +73,13 @@ public class CompassListener implements Listener {
                 playerhead.setItemMeta(playerheadMeta);
                 UUID uuid = loopPlayer.getUniqueId();
                 String name = loopPlayer.getName();
-                playerSelector.addItem(ItemBuilder.from(playerhead).setName("§6" + loopPlayer.getName()).setLore("§eClick To Track").asGuiItem(event1 -> {
+                playerSelector.addItem(ItemBuilder.from(playerhead).setName("§6" + loopPlayer.getName()).setLore(Objects.requireNonNull(fredHunt.config.getString("Language.Gui.Click-To-Track"))).asGuiItem(event1 -> {
                     ItemStack itemStack2 = event.getPlayer().getInventory().getItemInMainHand();
                     if (!itemStack.equals(itemStack2)) return;
                     ItemStack compass = new ItemStack(Material.COMPASS, itemStack.getAmount());
                     ItemMeta meta = compass.getItemMeta();
                     if (meta == null) return;
-                    meta.setDisplayName("§aTracker Compass");
+                    meta.setDisplayName(fredHunt.config.getString("Language.Item-Name"));
                     meta.getPersistentDataContainer().set(fredHunt.track_uuid, PersistentDataType.STRING, uuid.toString());
                     compass.setItemMeta(meta);
                     event.getPlayer().getInventory().setItemInMainHand(compass);
@@ -84,7 +89,12 @@ public class CompassListener implements Listener {
                     compassMeta.setLodestone(targetLocation);
                     compassMeta.setLodestoneTracked(false);
                     compass.setItemMeta(compassMeta);
-                    player.sendMessage("§a§lSuccess! §7Now Tracking " + name);
+                    if (fredHunt.config.getBoolean("Messages.Send-Tracker-Track-Message")) {
+                        player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Now-Tracking")).replace("[player]", name));
+                    }
+                    if (fredHunt.config.getBoolean("Messages.Send-Player-Tracked-Message")) {
+                        loopPlayer.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Being-Tracked")).replace("[player]", player.getName()));
+                    }
                     playerSelector.close(player);
                 }));
             }
@@ -93,8 +103,8 @@ public class CompassListener implements Listener {
                 pagesize = 4;
             }
             if (paged) {
-                playerSelector.setItem(6, 3, ItemBuilder.from(Material.SPECTRAL_ARROW).setName("§cBack").asGuiItem(event1 -> playerSelector.previous()));
-                playerSelector.setItem(6, 7, ItemBuilder.from(Material.SPECTRAL_ARROW).setName("§aNext").asGuiItem(event1 -> playerSelector.next()));
+                playerSelector.setItem(6, 3, ItemBuilder.from(Material.SPECTRAL_ARROW).setName(Objects.requireNonNull(fredHunt.config.getString("Language.Gui.Back"))).asGuiItem(event1 -> playerSelector.previous()));
+                playerSelector.setItem(6, 7, ItemBuilder.from(Material.SPECTRAL_ARROW).setName(Objects.requireNonNull(fredHunt.config.getString("Language.Gui.Next"))).asGuiItem(event1 -> playerSelector.next()));
             }
             int extra = (pagesize * 7) - (Bukkit.getOnlinePlayers().size() % (pagesize * 7));
             for (int y = 0; y < extra; y++) {
@@ -103,16 +113,16 @@ public class CompassListener implements Listener {
             playerSelector.open(player);
         } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (!FredHunt.isValidUUID(itemData)) {
-                player.sendMessage("§c§lError! §7This Compass Contains an Invalid UUID. Please Report This Error");
+                player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Invalid-UUID")));
                 return;
             }
             Player target = Bukkit.getPlayer(UUID.fromString(itemData));
             if (target == null) {
-                player.sendMessage("§c§lError! §7This Compass Is Tracking an Offline Player.");
+                player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Offline-Player")));
                 return;
             }
             if (!target.getWorld().getUID().equals(player.getWorld().getUID())) {
-                player.sendMessage("§c§lError! §7This Player Is In A Different World");
+                player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Different-World")));
                 return;
             }
             Location targetLocation = target.getLocation();

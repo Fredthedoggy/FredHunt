@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -27,6 +28,9 @@ public class ManhuntCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
+        if (fredHunt.config.getBoolean("Permissions.Require-Permission") && player.hasPermission(Objects.requireNonNull(fredHunt.config.getString("Permissions.Permission"), "Invalid Config. Try Restarting?"))) {
+            player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Missing-Permission")));
+        }
         AtomicReference<Boolean> cancel = new AtomicReference<>(false);
         player.getInventory().forEach(itemStack -> {
             if (cancel.get()) return;
@@ -52,7 +56,7 @@ public class ManhuntCommand implements CommandExecutor {
         ItemStack compass = new ItemStack(Material.COMPASS, 1);
         ItemMeta meta = compass.getItemMeta();
         if (meta == null) return true;
-        meta.setDisplayName("§aTracker Compass");
+        meta.setDisplayName(fredHunt.config.getString("Language.Item-Name"));
         meta.getPersistentDataContainer().set(fredHunt.track_uuid, PersistentDataType.STRING, uuid.toString());
         compass.setItemMeta(meta);
         Location targetLocation = player.getLocation();

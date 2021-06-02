@@ -7,5 +7,5 @@ authors: [ Fredthedoggy ]
 description: Fredthedoggy's Manhunt Plugin
 commands:
   tracker:
-    aliases: [manhunt, compass, fredhunt, track, hunt, hunter]
+    aliases: [ manhunt, compass, fredhunt, track, hunt, hunter ]
     usage: "/tracker [Player]"

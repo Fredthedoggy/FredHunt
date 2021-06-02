@@ -1,13 +1,18 @@
 package me.fredthedoggy.fredhunt;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public final class FredHunt extends JavaPlugin {
+
+    FileConfiguration config = this.getConfig();
 
     HashMap<UUID, Long> cooldowns = new HashMap<>();
 
@@ -18,6 +23,9 @@ public final class FredHunt extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Metrics metrics = new Metrics(this, 11552);
+        this.saveDefaultConfig();
+        this.config.options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(new CompassListener(this), this);
         this.getCommand("tracker").setExecutor(new ManhuntCommand(this));
     }
