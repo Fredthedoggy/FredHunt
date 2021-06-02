@@ -30,6 +30,7 @@ public class ManhuntCommand implements CommandExecutor {
         Player player = (Player) sender;
         if (fredHunt.config.getBoolean("Permissions.Require-Permission") && player.hasPermission(Objects.requireNonNull(fredHunt.config.getString("Permissions.Permission"), "Invalid Config. Try Restarting?"))) {
             player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Missing-Permission")));
+            return true;
         }
         AtomicReference<Boolean> cancel = new AtomicReference<>(false);
         player.getInventory().forEach(itemStack -> {
