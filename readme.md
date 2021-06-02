@@ -8,6 +8,8 @@ Based On Dream's Manhunt Plugin [Link](https://www.patreon.com/DreamWasTaken)
 - Nether Compass
 - GUI for selecting who to track
 - Easy To Use
+- Config
+- Language Files
 
 ![Example](https://i.ibb.co/VQ85kWP/javaw-Nea-On-BYCF3.png)
 
@@ -37,11 +39,6 @@ Download [The Latest Development Build](https://nightly.link/Fredthedoggy/FredHu
 ## Support
 
 Support is offered by me (Fredthedoggy) in my [Discord Server](https://discord.gg/cbrrGkSEg3) [discord.gg/cbrrGkSEg3](https://discord.gg/cbrrGkSEg3)
-
-## Comming Soon
-
-- Config
-- Language Files
 
 ## Bugs and Feature requests
 
