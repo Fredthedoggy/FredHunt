@@ -131,7 +131,7 @@ public class CompassListener implements Listener {
             compassMeta.setLodestone(targetLocation);
             compassMeta.setLodestoneTracked(false);
             itemStack.setItemMeta(compassMeta);
-            player.sendMessage("§a§lSuccess! §7Now Tracking " + target.getName());
+            player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Now-Tracking")).replace("[player]", target.getName()));
         }
     }
 
