@@ -1,8 +1,8 @@
 package me.fredthedoggy.fredhunt;
 
-import me.mattstudios.gui.components.util.ItemBuilder;
-import me.mattstudios.gui.guis.GuiItem;
-import me.mattstudios.gui.guis.PaginatedGui;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

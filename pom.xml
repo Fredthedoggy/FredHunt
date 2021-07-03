@@ -35,16 +35,20 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>me.mattstudios.gui</pattern>
+                            <pattern>dev.triumphteam.gui</pattern>
                             <shadedPattern>me.fredthedoggy.fredhunt.gui</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>me.mattstudios.util</pattern>
+                            <pattern>dev.triumphteam.util</pattern>
                             <shadedPattern>me.fredthedoggy.fredhunt.utils.mattstudios</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.fredthedoggy.fredhunt.utils.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.kyori</pattern>
+                            <shadedPattern>me.fredthedoggy.fredhunt.kyori</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
@@ -88,7 +92,7 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>matt-repo</id>
+            <id>triumph-repo</id>
             <url>https://repo.mattstudios.me/artifactory/public/</url>
         </repository>
     </repositories>
@@ -101,9 +105,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.mattstudios</groupId>
+            <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>
-            <version>3.0.5-SNAPSHOT</version>
+            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
