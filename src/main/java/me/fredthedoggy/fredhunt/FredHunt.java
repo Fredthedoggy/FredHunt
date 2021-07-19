@@ -1,6 +1,7 @@
 package me.fredthedoggy.fredhunt;
 
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,18 +21,16 @@ public final class FredHunt extends JavaPlugin {
     private final static Pattern UUID_REGEX_PATTERN =
             Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
 
+    public boolean floodgate;
+
     @Override
     public void onEnable() {
         Metrics metrics = new Metrics(this, 11552);
+        floodgate = Bukkit.getPluginManager().isPluginEnabled("Floodgate");
         this.saveDefaultConfig();
         this.config.options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(new CompassListener(this), this);
         this.getCommand("tracker").setExecutor(new ManhuntCommand(this));
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
     }
 
     public static boolean isValidUUID(String str) {
