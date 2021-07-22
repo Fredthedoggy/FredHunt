@@ -5,7 +5,7 @@ api-version: 1.16
 prefix: FredHunt
 authors: [ Fredthedoggy ]
 description: Fredthedoggy's Manhunt Plugin
-softdepend: [ Floodgate ]
+softdepend: [ floodgate ]
 commands:
   tracker:
     aliases: [ manhunt, compass, fredhunt, track, hunt, hunter ]

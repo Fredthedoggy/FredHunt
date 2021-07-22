@@ -26,7 +26,7 @@ public final class FredHunt extends JavaPlugin {
     @Override
     public void onEnable() {
         Metrics metrics = new Metrics(this, 11552);
-        floodgate = Bukkit.getPluginManager().isPluginEnabled("Floodgate");
+        floodgate = Bukkit.getPluginManager().isPluginEnabled("floodgate");
         this.saveDefaultConfig();
         this.config.options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(new CompassListener(this), this);
