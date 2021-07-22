@@ -1,5 +1,6 @@
 # FredHunt
-A Compass Tracking Plugin for Minecraft 1.16.x
+A Compass Tracking Plugin for Minecraft 1.16+
+(Tested Version: `1.16.1`, `1.16.5`, `1.17`)
 
 Based On Dream's Manhunt Plugin [Link](https://www.patreon.com/DreamWasTaken)
 
