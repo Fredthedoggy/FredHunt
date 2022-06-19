@@ -28,7 +28,7 @@ public class ManhuntCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command,String label, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
-        if (fredHunt.config.getBoolean("Permissions.Require-Permission") && player.hasPermission(Objects.requireNonNull(fredHunt.config.getString("Permissions.Permission"), "Invalid Config. Try Restarting?"))) {
+        if (fredHunt.config.getBoolean("Permissions.Require-Permission") && !player.hasPermission(Objects.requireNonNull(fredHunt.config.getString("Permissions.Permission"), "Invalid Config. Try Restarting?"))) {
             player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Missing-Permission")));
             return true;
         }
