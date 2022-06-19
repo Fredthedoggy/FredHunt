@@ -2,6 +2,10 @@
 Permissions:
   Require-Permission: false
   Permission: fredhunt.use
+# Compass on Join
+Join:
+  Join-Compass: false # Give players a compass on join?
+  Join-Player: "" # UUID of player to track on join. Set to "" to disable
 # Message Settings
 Messages:
   Send-Tracker-Track-Message: true
@@ -9,7 +13,7 @@ Messages:
 # Gui Settings
 Gui:
   Cooldown: false
-  Cooldown-time: 3000 # time in milliseconds, seconds * 1000
+  Cooldown-time: 3000 # Time in milliseconds, seconds * 1000
 # Language
 Language:
   Item-Name: "§aTracker Compass"

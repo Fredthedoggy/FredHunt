@@ -5,11 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
@@ -27,6 +29,20 @@ public class CompassListener implements Listener {
 
     public CompassListener(FredHunt fredHunt) {
         this.fredHunt = fredHunt;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (fredHunt.config.getBoolean("Join.Join-Compass")) {
+            if (Utils.hasCompass(event.getPlayer(), fredHunt) == null) {
+                String uuid = fredHunt.config.getString("Join.Join-Player");
+                UUID track = event.getPlayer().getUniqueId();
+                if (uuid != "" && uuid != null) {
+                    track = UUID.fromString(uuid);
+                }
+                Utils.giveTracker(event.getPlayer(), track, fredHunt);
+            }
+        }
     }
 
     @EventHandler
@@ -51,6 +67,7 @@ public class CompassListener implements Listener {
                 fredHunt.cooldowns.put(player.getUniqueId(), time);
             }
             guiManager.openGui(fredHunt, player, itemStack, event);
+            event.setCancelled(true); // Fix interfering with plugins that use compasses, like WorldEdit
         } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (!FredHunt.isValidUUID(itemData)) {
                 player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Invalid-UUID")));
@@ -85,7 +102,7 @@ public class CompassListener implements Listener {
         if (itemData != null) event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDie(PlayerDeathEvent event) {
         Player player = event.getEntity();
         for (ItemStack itemStack : event.getEntity().getInventory().getContents()) {

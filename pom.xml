@@ -6,7 +6,7 @@
 
     <groupId>me.fredthedoggy</groupId>
     <artifactId>FredHunt</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
 
     <name>FredHunt</name>
@@ -107,12 +107,12 @@
         <dependency>
             <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>
-            <version>3.0.3</version>
+            <version>3.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

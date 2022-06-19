@@ -29,6 +29,7 @@ public final class FredHunt extends JavaPlugin {
         floodgate = Bukkit.getPluginManager().isPluginEnabled("floodgate");
         this.saveDefaultConfig();
         this.config.options().copyDefaults(true);
+        this.saveConfig();
         this.getServer().getPluginManager().registerEvents(new CompassListener(this), this);
         this.getCommand("tracker").setExecutor(new ManhuntCommand(this));
     }

@@ -32,19 +32,11 @@ public class ManhuntCommand implements CommandExecutor {
             player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Missing-Permission")));
             return true;
         }
-        AtomicReference<Boolean> cancel = new AtomicReference<>(false);
-        player.getInventory().forEach(itemStack -> {
-            if (cancel.get()) return;
-            if (itemStack == null) return;
-            if (!itemStack.getType().equals(Material.COMPASS)) return;
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta == null) return;
-            String itemData = itemMeta.getPersistentDataContainer().get(fredHunt.track_uuid, PersistentDataType.STRING);
-            if (itemData == null) return;
-            cancel.set(true);
-            itemStack.setAmount(0);
-        });
-        if (cancel.get()) return true;
+        ItemStack current = Utils.hasCompass(player, fredHunt);
+        if (current != null) {
+            current.setAmount(0);
+            return true;
+        }
         String name = "";
         UUID uuid = player.getUniqueId();
         if (args.length > 0) {
@@ -54,19 +46,7 @@ public class ManhuntCommand implements CommandExecutor {
         if (target != null) {
             uuid = target.getUniqueId();
         }
-        ItemStack compass = new ItemStack(Material.COMPASS, 1);
-        ItemMeta meta = compass.getItemMeta();
-        if (meta == null) return true;
-        meta.setDisplayName(fredHunt.config.getString("Language.Item-Name"));
-        meta.getPersistentDataContainer().set(fredHunt.track_uuid, PersistentDataType.STRING, uuid.toString());
-        compass.setItemMeta(meta);
-        Location targetLocation = player.getLocation();
-        targetLocation.setY(1000);
-        CompassMeta compassMeta = (CompassMeta) meta;
-        compassMeta.setLodestone(targetLocation);
-        compassMeta.setLodestoneTracked(false);
-        compass.setItemMeta(compassMeta);
-        player.getInventory().addItem(compass);
+        Utils.giveTracker(player, uuid, fredHunt);
         return true;
     }
 }
