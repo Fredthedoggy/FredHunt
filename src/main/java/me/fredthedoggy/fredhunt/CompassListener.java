@@ -9,15 +9,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,12 +32,32 @@ public class CompassListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerWorldChange(PlayerTeleportEvent event) {
+        if (event.getFrom().getWorld().getUID().equals(event.getTo().getWorld().getUID())) return;
+        Map<UUID, Location> map = new HashMap<>();
+        Map<UUID, Location> worldMap = fredHunt.lastSeen.putIfAbsent(event.getPlayer().getUniqueId(), map);
+        if (worldMap == null) worldMap = map;
+        worldMap.put(event.getFrom().getWorld().getUID(), event.getFrom().clone());
+        worldMap.remove(event.getTo().getWorld().getUID());
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        fredHunt.lastSeen.remove(event.getEntity().getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        fredHunt.lastSeen.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (fredHunt.config.getBoolean("Join.Join-Compass")) {
             if (Utils.hasCompass(event.getPlayer(), fredHunt) == null) {
                 String uuid = fredHunt.config.getString("Join.Join-Player");
                 UUID track = event.getPlayer().getUniqueId();
-                if (uuid != "" && uuid != null) {
+                if (!"".equals(uuid) && uuid != null) {
                     track = UUID.fromString(uuid);
                 }
                 Utils.giveTracker(event.getPlayer(), track, fredHunt);
@@ -79,6 +99,25 @@ public class CompassListener implements Listener {
                 return;
             }
             if (!target.getWorld().getUID().equals(player.getWorld().getUID())) {
+                if (fredHunt.config.getBoolean("Tracker-Compass.Track-Portals")) {
+                    Map<UUID, Location> lastLocationMap = fredHunt.lastSeen.get(target.getUniqueId());
+                    if (lastLocationMap == null) {
+                        player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Different-World")));
+                        return;
+                    }
+                    Location targetLocation = lastLocationMap.get(player.getWorld().getUID());
+                    if (targetLocation == null) {
+                        player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Different-World")));
+                        return;
+                    }
+                    targetLocation.setY(1000);
+                    CompassMeta compassMeta = (CompassMeta) itemMeta;
+                    compassMeta.setLodestone(targetLocation);
+                    compassMeta.setLodestoneTracked(false);
+                    itemStack.setItemMeta(compassMeta);
+                    player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Portal-Tracking")).replace("[player]", target.getName()));
+                    return;
+                }
                 player.sendMessage(Objects.requireNonNull(fredHunt.config.getString("Language.Errors.Different-World")));
                 return;
             }

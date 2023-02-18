@@ -2,11 +2,13 @@ package me.fredthedoggy.fredhunt;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,8 @@ public final class FredHunt extends JavaPlugin {
 
     FileConfiguration config = this.getConfig();
 
-    HashMap<UUID, Long> cooldowns = new HashMap<>();
+    Map<UUID, Long> cooldowns = new HashMap<>();
+    Map<UUID, Map<UUID, Location>> lastSeen = new HashMap<>();
 
     NamespacedKey track_uuid = new NamespacedKey(this, "track_uuid");
 

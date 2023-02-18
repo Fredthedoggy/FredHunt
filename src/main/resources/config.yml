@@ -14,6 +14,9 @@ Messages:
 Gui:
   Cooldown: false
   Cooldown-time: 3000 # Time in milliseconds, seconds * 1000
+# Tracker Compass Settings
+Tracker-Compass:
+  Track-Portals: true # Track the last portal a player used in a given world
 # Language
 Language:
   Item-Name: "§aTracker Compass"
@@ -23,6 +26,7 @@ Language:
     Next: "§aNext"
     Back: "§cBack"
   Now-Tracking: "§a§lSuccess! §eNow Tracking [player]" # Available Variables: [player]
+  Portal-Tracking: "§a§lSuccess! §eNow Tracking [player]'s Portal Location"
   Being-Tracked: "§e[player] &ais now tracking you" # Available Variables: [player]
   Missing-Permission: "§cError! §7You Can't Do That"
   Cooldown-Message: "§c§lError! §7Please Wait [seconds] Seconds" # Available Variables: [seconds]
